@@ -14,8 +14,7 @@ def parse_json(json_str: str, keyword_callback=None, required_fields=None, keywo
     try:
         json_doc = json.loads(json_str)
     except json.decoder.JSONDecodeError:
-        print("json.decoder.JSONDecodeError")
-        return
+        raise json.decoder.JSONDecodeError
     except TypeError:
         print("Put str")
         return
