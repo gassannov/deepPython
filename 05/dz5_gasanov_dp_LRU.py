@@ -1,43 +1,25 @@
-from collections import namedtuple
+from collections import deque
+
+deq = deque()
+
 
 class LRUCache:
 
     def __init__(self, limit=42):
         self.limit = limit
-        pass
+        self.dict_lru = {}
+        self.deque_lru = deque()
 
     def get(self, key):
-        pass
+        if key in self.deque_lru:
+            self.deque_lru.remove(key)
+            self.deque_lru.append(key)
+            return self.dict_lru[key]
+        return None
 
     def set(self, key, value):
-        pass
-
-
-cache = LRUCache(2)
-
-cache.set("k1", "val1")
-cache.set("k2", "val2")
-
-print(cache.get("k3"))  # None
-print(cache.get("k2"))  # "val2"
-print(cache.get("k1"))  # "val1"
-
-cache.set("k3", "val3")
-
-print(cache.get("k3"))  # "val3"
-print(cache.get("k2"))  # None
-print(cache.get("k1"))  # "val1"
-
-a = namedtuple()
-a.s
-
-# Если
-# удобнее, get / set
-# можно
-# сделать
-# по
-# аналогии
-# с
-# dict:
-# cache["k1"] = "val1"
-# print(cache["k3"])
+        self.deque_lru.append(key)
+        if len(self.deque_lru) > self.limit:
+            removed = self.deque_lru.popleft()
+            del self.dict_lru[removed]
+        self.dict_lru[key] = value
