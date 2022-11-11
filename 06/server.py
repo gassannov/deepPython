@@ -1,0 +1,57 @@
+import socket
+import sys
+import time
+import threading
+import queue
+from url_handler import url_handler
+
+
+class Server:
+    def __init__(self, worker_num=10, top_k=5, handler_func=url_handler, handler_print=print):
+        self.serve_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM, proto=0)
+        self.serve_socket.bind(('', 53210))
+        self.serve_socket.listen()
+        self.top_k = top_k
+        self.url_queue = queue.Queue()
+        self.worker_num = worker_num
+        self.url_handled = 0
+        self.handler_func = handler_func
+        self.handler_print = handler_print
+
+    def run_server(self):
+        threads = [threading.Thread(target=self.handle_request, args=[i], daemon=True)
+                   for i in range(self.worker_num)]
+        for thread in threads:
+            thread.start()
+        while True:
+            client_sock, _ = self.serve_socket.accept()
+            if not client_sock:
+                self.url_queue.put(('end', None))
+                break
+            data = client_sock.recv(1024)
+            if not data:
+                self.url_queue.put(('end', None))
+                break
+            self.url_queue.put((data.decode(), client_sock))
+        for thread in threads:
+            thread.join()
+
+    def handle_request(self, thread_id):
+        while True:
+            data, client_sock = self.url_queue.get()
+            if data == 'end':
+                self.url_queue.put(('end', None))
+                break
+            data_handled = self.handler_func(data, self.top_k)
+            client_sock.sendall(bytes(data_handled, encoding='utf-8'))
+            self.url_handled += 1
+            self.handler_print(f'handled {self.url_handled} urls last by {thread_id}')
+            client_sock.close()
+
+
+if __name__ == '__main__':
+    server = Server(worker_num=int(sys.argv[1]), top_k=int(sys.argv[2]))
+    start = time.time()
+    server.run_server()
+    end = time.time()
+    print(f'Time passed for {sys.argv[1]} workers: {end-start}')
