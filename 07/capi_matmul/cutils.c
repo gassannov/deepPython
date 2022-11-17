@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include <Python.h>
+#include <iostream>
 
 double get_matrix_item(PyObject* matrix, int index1, int index2){
     PyObject *row = PyList_GetItem(matrix, index1);
@@ -11,6 +12,7 @@ double get_matrix_item(PyObject* matrix, int index1, int index2){
 
 PyObject* matmul(PyObject* matrix1, PyObject* matrix2){
     long row_num1 = PyList_Size(matrix1);
+    printf("ld\n", row_num1);
     long row_num2 = PyList_Size(matrix2);
     long column_num1 = PyList_Size(PyList_GetItem(matrix1, 0));
     long column_num2 = PyList_Size(PyList_GetItem(matrix2, 0));

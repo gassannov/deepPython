@@ -1,52 +1,34 @@
 import asyncio
-import aiohttp
-import time
+import unittest
+from main import fetch, batch_fetch
+from unittest import mock
 
 
-URL = "https://docs.python.org/3/whatsnew/3.11.html"
-URLS = [URL] * 50
-counter = 0
+class AsyncTest(unittest.TestCase):
+    @mock.patch('url_handler.html_handler')
+    def test_fetch(self, handler_mock: mock.Mock):
+        url = 'https://en.wikipedia.org/wiki/Christian_Weise'
+        top = 'foo'
 
+        session_mock = mock.Mock()
+        resp_mock = mock.Mock()
+        handler_mock.return_value = top
+        print_mock = mock.Mock()
+        queue_mock = mock.AsyncMock()
 
-async def fetch(session, q):
-    while True:
-        url = await q.get()
-        print(q.qsize())
-        global counter
-        counter += 1
+        get_mock = mock.MagicMock()
+        get_mock.__aenter__.return_value = resp_mock
+        session_mock.get.return_value = get_mock
+        resp_mock.read = mock.AsyncMock()
+        resp_mock.return_value = url
+        resp_mock.status = 200
 
-        try:
-            async with session.get(url) as resp:
-                data = await resp.read()
-                assert resp.status == 200
-        finally:
-            q.task_done()
+        asyncio.run(fetch(session_mock, queue_mock, print_mock))
 
+        print_mock.assert_called_once_with(f'url:{url}, top:{top}')
 
-async def batch_fetch(urls, workers=5):
-    q = asyncio.Queue()
-    for url in urls:
-        await q.put(url)
-
-    async with aiohttp.ClientSession() as session:
-        workers = [
-            asyncio.create_task(fetch(session, q))
-            for _ in range(workers)
-        ]
-        await q.join()
-
-        for w in workers:
-            w.cancel()
-
-
-async def main():
-    await batch_fetch(URLS, workers=1)
-
-
-t1 = time.time()
-
-asyncio.run(main())
-
-t2 = time.time()
-print("time", t2 - t1)
-print("count", counter)
+    @mock.patch('url_handler.html_handler')
+    def test_batch_fetch(self, handler_mock: mock.Mock):
+        urls = ['https://en.wikipedia.org/wiki/Christian_Weise']*10
+        top = 'foo'
+        handler_mock.return_value = top
