@@ -34,14 +34,14 @@ jobs:
         python -m unittest discover 04
 
     - name: 05
-        run: |
-          python -m unittest discover 05
+      run: |
+        python -m unittest discover 05
 
     - name: 06
-        run: |
-          python -m unittest discover 06
+      run: |
+        python -m unittest discover 06
 
     - name: 08
-        run: |
-          python -m unittest discover 08
+      run: |
+        python -m unittest discover 08
 
