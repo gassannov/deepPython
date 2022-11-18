@@ -44,8 +44,8 @@ jobs:
         python -m unittest discover 06
 
     - name: 07
-        run: |
-          cd 07; python setup.pu install; python -m unittest
+      run: |
+        cd 07; python setup.pu install; python -m unittest
 
     - name: 08
       run: |
