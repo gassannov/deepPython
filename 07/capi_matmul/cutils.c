@@ -2,7 +2,6 @@
 #include <stdio.h>
 
 #include <Python.h>
-#include <iostream>
 
 double get_matrix_item(PyObject* matrix, int index1, int index2){
     PyObject *row = PyList_GetItem(matrix, index1);
@@ -12,15 +11,12 @@ double get_matrix_item(PyObject* matrix, int index1, int index2){
 
 PyObject* matmul(PyObject* matrix1, PyObject* matrix2){
     long row_num1 = PyList_Size(matrix1);
-    printf("ld\n", row_num1);
     long row_num2 = PyList_Size(matrix2);
     long column_num1 = PyList_Size(PyList_GetItem(matrix1, 0));
     long column_num2 = PyList_Size(PyList_GetItem(matrix2, 0));
-
     if (column_num1 != row_num2) return NULL;
 
-    PyObject* result_matirx = PyList_New(column_num1);
-
+    PyObject* result_matrix = PyList_New(row_num1);
     for (int i = 0; i < row_num1; ++i) {
         PyObject* row = PyList_New(column_num2);
         for (int j = 0; j < column_num2; ++j) {
@@ -30,9 +26,9 @@ PyObject* matmul(PyObject* matrix1, PyObject* matrix2){
             }
             PyList_SetItem(row, j, PyFloat_FromDouble(sum));
         }
-        PyList_SetItem(result_matirx, i, row);
+        PyList_SetItem(result_matrix, i, row);
     }
-    return result_matirx;
+    return result_matrix;
 }
 
 PyObject* cutils_matmul(PyObject* self, PyObject* args)
@@ -45,8 +41,8 @@ PyObject* cutils_matmul(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    PyObject* result_matirx = matmul(matrix1, matrix2);
-    return result_matirx;
+    PyObject* result_matrix = matmul(matrix1, matrix2);
+    return result_matrix;
 }
 
 static PyMethodDef methods[] = {
