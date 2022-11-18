@@ -30,6 +30,7 @@ jobs:
         python -m pip install flake8
         python -m pip install bs4
         python -m pip install cffi
+        python -m pip install aiohttp
 
     - name: 04
       run: |
@@ -46,7 +47,7 @@ jobs:
     - name: 07
       run: |
         cd 07/capi_matmul; python setup.py install;
-        python -m unittest
+        python -m unittest discover 07
 
     - name: 08
       run: |
