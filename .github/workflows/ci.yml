@@ -30,22 +30,18 @@ jobs:
         python -m pip install flake8
 
     - name: 04
-      -name: test
       run: |
         python -m unittest discover 04
 
     - name: 05
-        -name: test
         run: |
           python -m unittest discover 05
 
     - name: 06
-        -name: test
         run: |
           python -m unittest discover 06
 
     - name: 08
-        -name: test
         run: |
           python -m unittest discover 08
 
