@@ -45,7 +45,8 @@ jobs:
 
     - name: 07
       run: |
-        cd 07; python setup.py install; python -m unittest
+        cd 07/capi_matmul; python setup.py install;
+        python -m unittest
 
     - name: 08
       run: |
