@@ -27,10 +27,9 @@ class TestMetaClasses(unittest.TestCase):
             t = 1
         self.assertTrue(t, 1)
 
-
     def test_errors(self):
         inst = CustomClass()
-        inst_x = lambda : inst.x
+        inst_x = lambda: inst.x
         inst_val = lambda: inst.val
         inst_line = lambda: inst.line()
         inst_yyy = lambda: inst.yyy
