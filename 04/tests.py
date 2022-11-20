@@ -43,7 +43,7 @@ class TestMetaClasses(unittest.TestCase):
 
 class TestDescriptor(unittest.TestCase):
     def test_num(self):
-        data_right = Data(100)
+        data_right = Data(num=100)
         self.assertEqual(data_right.num, 100)
         a = 0
         try:
@@ -51,6 +51,7 @@ class TestDescriptor(unittest.TestCase):
         except TypeError:
             a = 1
         self.assertEqual(a, 1)
+        self.assertEqual(data_right.num, 100)
 
     def test_name(self):
         data_right = Data(name='man')
@@ -61,14 +62,21 @@ class TestDescriptor(unittest.TestCase):
         except TypeError:
             a = 1
         self.assertEqual(a, 1)
+        self.assertEqual(data_right.name, 'man')
 
     def test_price(self):
         data_right = Data(price=100)
         self.assertEqual(data_right.price, 100)
         a = 0
+        b = 0
         try:
             self.assertRaises(TypeError, Data(price='100'))
-            self.assertRaises(TypeError, Data(price=-100))
         except TypeError:
             a = 1
+        try:
+            self.assertRaises(TypeError, Data(price=-100))
+        except TypeError:
+            b = 1
         self.assertEqual(a, 1)
+        self.assertEqual(b, 1)
+        self.assertEqual(data_right.price, 100)
