@@ -1,0 +1,11 @@
+[DEBUG] - k1
+[INFO] - set [key: k1 value: val1]: len lru cache: 1; limit: 2
+[DEBUG] - k2
+[INFO] - set [key: k2 value: val2]: len lru cache: 2; limit: 2
+[DEBUG] - k3
+[INFO] - for set [key: k3 value: val3] reach limit: 2; key: k1 remove
+[DEBUG] - removed in dict (excpected False): False
+[INFO] - set [key: k3 value: val3]: len lru cache: 2; limit: 2
+[ERROR] - key: k1 not in lru
+[INFO] - for key: k2 found value: val2
+[ERROR] - key: k5 not in lru
