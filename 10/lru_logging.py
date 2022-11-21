@@ -1,6 +1,5 @@
 import sys
 from collections import deque
-import os
 import logging.config
 import logging
 
@@ -82,8 +81,6 @@ class LRUCache:
 
 if __name__ == '__main__':
     FILENAME = 'lru_logging.log'
-    if os.path.exists(FILENAME):
-        os.remove(FILENAME)
 
     logging.config.dictConfig(LOGG_CONFIG)
     if len(sys.argv) > 1 and '-s' in sys.argv:
