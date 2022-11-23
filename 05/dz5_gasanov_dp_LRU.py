@@ -18,6 +18,12 @@ class LRUCache:
         return None
 
     def set(self, key, value):
+        if self.get(key) is not None:
+            self.deque_lru.remove(key)
+            self.deque_lru.append(key)
+            self.dict_lru[key] = value
+            return
+
         self.deque_lru.append(key)
         if len(self.deque_lru) > self.limit:
             removed = self.deque_lru.popleft()
