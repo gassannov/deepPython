@@ -23,6 +23,7 @@ class LRUTest(unittest.TestCase):
         cache.set("k2", "val2")
         cache.set("k2", "val2_new")
         self.assertEqual(cache.get('k1'), 'val1')
+        self.assertEqual(cache.get('k2'), 'val2_new')  # проверка что все ключи на месте после изменения существующего
 
         cache.set("k1", "val1_new")
         cache.set('k3', 'val3')
@@ -34,6 +35,15 @@ class LRUTest(unittest.TestCase):
         cache.set("k2", "val2")
         cache.set("k2", "val12_new")
         self.assertEqual(len(cache.deque_lru), 2)
+
+    def test_exist_key_effects(self):
+        cache = LRUCache(2)
+        cache.set("k1", "val1")
+        cache.set("k2", "val2")
+        cache.set('k1', 'val1_new')
+        cache.set("k1", "val2_new")
+        self.assertEqual(cache.get('k1'), 'val1')
+        self.assertEqual(cache.get('k2'), 'val2_new')
 
     def test_one_limit(self):
         cache = LRUCache(1)

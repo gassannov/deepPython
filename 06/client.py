@@ -40,12 +40,16 @@ class Client:
             if url == 'end':
                 self.url_queue.put('end')
                 break
-            client_sock = self.make_socket()
-            client_sock.connect(('127.0.0.1', 53210))
-            client_sock.sendall(url.encode())
-            data = client_sock.recv(1024)
-            self.data_handler(data, thread_id)
-            client_sock.close()
+            try:
+                client_sock = self.make_socket()
+                client_sock.connect(('127.0.0.1', 53210))
+                client_sock.sendall(url.encode())
+                data = client_sock.recv(1024)
+                self.data_handler(data, thread_id)
+                client_sock.close()
+            except Exception as e:
+                print(f'url {url} t_id{thread_id} error occured: {e}')
+                continue
 
 
 if __name__ == '__main__':
