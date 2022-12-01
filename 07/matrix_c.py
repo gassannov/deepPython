@@ -1,10 +1,12 @@
+import os
+
 import cffi
 import random
 
 
 def mul_matrix(matrix1, matrix2):
     ffi = cffi.FFI()
-    lib = ffi.dlopen('/Users/maratgasanov/ML_VK/2semestr/deepPython/07/libmatrix/libmatrix.so')
+    lib = ffi.dlopen(f'{os.getcwd()}/libmatrix/libmatrix.so')
     ffi.cdef('''
     typedef struct Matrix{
         int** matrix;
