@@ -17,6 +17,7 @@ class Server:
         self.url_handled = 0
         self.handler_func = handler_func
         self.handler_print = handler_print
+        self.lock = threading.Lock()
 
     def run_server(self):
         threads = [threading.Thread(target=self.handle_request, args=[i], daemon=True)
@@ -42,11 +43,17 @@ class Server:
             if data == 'end':
                 self.url_queue.put(('end', None))
                 break
-            data_handled = self.handler_func(data, self.top_k)
-            client_sock.sendall(bytes(data_handled, encoding='utf-8'))
-            self.url_handled += 1
-            self.handler_print(f'handled {self.url_handled} urls last by {thread_id}')
-            client_sock.close()
+            try:
+                data_handled = self.handler_func(data, self.top_k)
+                client_sock.sendall(bytes(data_handled, encoding='utf-8'))
+                self.handler_print(f'handled {self.url_handled} urls last by {thread_id}')
+                client_sock.close()
+                self.lock.acquire()
+                self.url_handled += 1
+                self.lock.release()
+            except Exception as e:
+                print(f'url {data} t_id{thread_id} error occured: {e}')
+                continue
 
 
 if __name__ == '__main__':

@@ -30,7 +30,8 @@ class Client:
 
     def put_data(self):
         for url in self.urls:
-            self.url_queue.put(url)
+            self.url_queue.put(url[0:len(url)-1])
+        self.url_queue.put('end')
         for thread in self.threads:
             thread.join()
 
@@ -54,10 +55,8 @@ class Client:
 
 if __name__ == '__main__':
     with open(sys.argv[2], "r") as file_:
-        urls = [url[0:len(url)-1] for url in file_]
-    urls.append('end')
-    client = Client(urls=urls, thread_count=int(sys.argv[1]))
-    start = time.time()
-    client.put_data()
-    end = time.time()
-    print(f'Time passed for {sys.argv[1]} threads: {end-start}')
+        client = Client(urls=file_, thread_count=int(sys.argv[1]))
+        start = time.time()
+        client.put_data()
+        end = time.time()
+        print(f'Time passed for {sys.argv[1]} threads: {end-start}')

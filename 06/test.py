@@ -44,7 +44,7 @@ class TestClient(unittest.TestCase):
     def test_sender(self, mock_sock: mock.Mock):
         resp = io.StringIO()
         def mock_print(data, thread_id): print(data.decode(), file=resp)
-        urls = ['https://en.wikipedia.org/wiki/Dino_Time']*2 + ['end']
+        urls = ['https://en.wikipedia.org/wiki/Dino_Time']*2
 
         client_ = client.Client(urls=urls)
         client_.data_handler = mock_print
